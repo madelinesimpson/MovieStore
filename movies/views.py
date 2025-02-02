@@ -1,5 +1,6 @@
-from django.shortcuts import render
-from .models import Movie
+from django.shortcuts import render, redirect
+from .models import Movie, Review
+from django.contrib.auth.decorators import login_required
 
 def index(request):
     search_term = request.GET.get('search')
@@ -9,14 +10,29 @@ def index(request):
         movies = Movie.objects.all()
     template_data = {}
     template_data['title'] = 'Movies'
-    template_data['movies'] = movies
+    template_data['movies'] = Movie.objects.all()
     return render(request, 'movies/index.html',
                   {'template_data': template_data})
 
 def show(request, id):
     movie = Movie.objects.get(id=id)
+    reviews = Review.objects.filter(movie=movie)
     template_data = {}
     template_data['title'] = movie.name
     template_data['movie'] = movie
+    template_data['reviews'] = reviews
     return render(request, 'movies/show.html',
                   {'template_data': template_data})
+
+@login_required
+def create_review(request, id):
+    if request.method == 'POST' and request.POST['comment'] != '':
+        movie = Movie.objects.get(id=id)
+        review = Review()
+        review.comment = request.POST['comment']
+        review.movie = movie
+        review.user = request.user
+        review.save()
+        return redirect('movies.show', id=id)
+    else:
+        return redirect('movies.show', id=id)
