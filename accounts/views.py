@@ -3,6 +3,7 @@ from django.contrib.auth import login as auth_login, authenticate, logout as aut
 from .forms import CustomUserCreationForm, CustomErrorList
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 
 @login_required
 def logout(request):
@@ -38,3 +39,32 @@ def signup(request):
         else:
             template_data['form'] = form
             return render(request, 'accounts/signup.html', {'template_data': template_data})
+
+def reset(request):
+    template_data = {}
+    template_data['title'] = 'Reset Password'
+    if request.method == 'GET':
+        return render(request, 'accounts/reset.html', {'template_data': template_data})
+    elif request.method == 'POST':
+        try:
+            user = User.objects.get(username=request.POST['username'])
+        except:
+            template_data['error'] = 'No user found.'
+            return render(request, 'accounts/reset.html', {'template_data': template_data})
+        if user is not None:
+            user.set_password(request.POST['newpassword'])
+            user.save()
+            return redirect('accounts.login')
+        else:
+            template_data['error'] = 'Problem with username.'
+            return render(request, 'accounts/reset.html', {'template_data': template_data})
+    else:
+        return render(request, 'accounts/reset.html', {'template_data': template_data})
+
+@login_required
+def orders(request):
+    template_data = {}
+    template_data['title'] = 'Orders'
+    template_data['orders'] = request.user.order_set.all()
+    return render(request, 'accounts/orders.html',
+        {'template_data': template_data})
