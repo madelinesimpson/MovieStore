@@ -40,6 +40,26 @@ def signup(request):
             template_data['form'] = form
             return render(request, 'accounts/signup.html', {'template_data': template_data})
 
+def reset(request):
+    template_data = {}
+    template_data['title'] = 'Reset Password'
+    if request.method == 'GET':
+        return render(request, 'accounts/reset.html', {'template_data': template_data})
+    elif request.method == 'POST':
+        try:
+            user = User.objects.get(username=request.POST['username'])
+        except:
+            template_data['error'] = 'No user found.'
+            return render(request, 'accounts/reset.html', {'template_data': template_data})
+        if user is not None:
+            user.set_password(request.POST['newpassword'])
+            user.save()
+            return redirect('accounts.login')
+        else:
+            template_data['error'] = 'Problem with username.'
+            return render(request, 'accounts/reset.html', {'template_data': template_data})
+    else:
+        return render(request, 'accounts/reset.html', {'template_data': template_data})
 
 @login_required
 def orders(request):
