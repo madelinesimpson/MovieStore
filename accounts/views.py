@@ -43,7 +43,7 @@ def signup(request):
 
 def securitySet(request):
     template_data = {}
-    template_data['title'] = 'Security Question:'
+    template_data['title'] = ' Set Security Questions'
     if request.method == 'GET':
         return render(request, 'accounts/security.html', {'template_data': template_data})
     elif request.method == 'POST':
@@ -51,7 +51,8 @@ def securitySet(request):
         try:
             user = User.objects.get(username = username)
             security = SecurityQuestion(user = user)
-            security.securityAnswer = request.POST['securityAnswer']
+            security.securityAnswer1 = request.POST['securityAnswer1']
+            security.securityAnswer2 = request.POST['securityAnswer2']
             security.save()
             return redirect('accounts.login')
         except:
@@ -72,8 +73,12 @@ def reset(request):
             template_data['error'] = 'No user found.'
             return render(request, 'accounts/reset.html', {'template_data': template_data})
         if user is not None:
-            securityAnswer = request.POST.get('securityAnswer')
-            if security.securityAnswer != securityAnswer:
+            securityAnswer1 = request.POST.get('securityAnswer1')
+            securityAnswer2 = request.POST.get('securityAnswer2')
+            if security.securityAnswer1 != securityAnswer1:
+                template_data['error'] = 'Incorrect security answer.'
+                return render(request, 'accounts/reset.html', {'template_data': template_data})
+            if security.securityAnswer2 != securityAnswer2:
                 template_data['error'] = 'Incorrect security answer.'
                 return render(request, 'accounts/reset.html', {'template_data': template_data})
             user.set_password(request.POST['newpassword'])
