@@ -11,24 +11,20 @@
             <form method="POST">
               {% csrf_token %}
                 <p>
-                    <label for="username">Username:</label>
-                    <input type="text" id="username" name="username" required><br>
-                </p>
-              <h3>
-                Security Question 1: What is your favorite food?
-              </h3>
-                <p>
-                    <label for="securityAnswer1">Security Answer 1:</label>
-                    <input type="text" id="securityAnswer1" name="securityAnswer1" required><br>
+                    <label for="username">Username:</label><br>
+                    <input type="text" id="username" name="username" required>
                 </p>
 
-              <h3>
-                Security Question 2: What is your mother's maiden name?
-              </h3>
-                <p>
-                    <label for="securityAnswer2">Security Answer 2:</label>
-                    <input type="text" id="securityAnswer2" name="securityAnswer2" required><br>
-                </p>
+              <p>
+                <label>Security Question 1: What is your favorite food?</label><br>
+                <input type="text" id="securityAnswer1" name="securityAnswer1" required>
+              </p>
+
+              <p>
+                <label>Security Question 2: What is your mother's maiden name?</label><br>
+                <input type="text" id="securityAnswer2" name="securityAnswer2" required>
+              </p>
+
               <button type="submit" class="btn bg-dark text-white">
                 Enter
               </button>
