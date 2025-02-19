@@ -36,29 +36,11 @@ def signup(request):
         form = CustomUserCreationForm(request.POST, error_class=CustomErrorList)
         if form.is_valid():
             form.save()
-            return redirect('accounts.security')
+            return redirect('accounts.login')
         else:
             template_data['form'] = form
             return render(request, 'accounts/signup.html', {'template_data': template_data})
 
-def securitySet(request):
-    template_data = {}
-    template_data['title'] = ' Set Security Questions'
-    if request.method == 'GET':
-        return render(request, 'accounts/security.html', {'template_data': template_data})
-    elif request.method == 'POST':
-        username = request.POST.get('username')
-        try:
-            user = User.objects.get(username = username)
-            security = SecurityQuestion(user = user)
-            security.securityAnswer1 = request.POST['securityAnswer1']
-            security.securityAnswer2 = request.POST['securityAnswer2']
-            security.save()
-            return redirect('accounts.login')
-        except:
-            return render(request, 'accounts/security.html', {'template_data': template_data})
-    else:
-        return render(request, 'accounts/security.html', {'template_data': template_data})
 
 def reset(request):
     template_data = {}

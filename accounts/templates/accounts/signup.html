@@ -11,6 +11,17 @@
             <form method="POST">
               {% csrf_token %}
               {{ template_data.form.as_p }}
+
+               <p>
+                <label for = "securityAnswer1">Security Question 1: What is your favorite food?</label>
+                <input type="text" id="securityAnswer1" name="securityAnswer1" class="form-control" required>
+              </p>
+
+              <p>
+                <label for = "securityAnswer2">Security Question 2: What is your mother's maiden name?</label>
+                <input type="text" id="securityAnswer2" name="securityAnswer2" class="form-control" required>
+              </p>
+
               <button type="submit" class="btn bg-dark text-white">
                 Sign Up
               </button>
